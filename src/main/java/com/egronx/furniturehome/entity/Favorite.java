@@ -21,10 +21,10 @@ public class Favorite {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id" , nullable = false)
-    User user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id" , nullable = false)
-    Product product;
+    private Product product;
 
 }

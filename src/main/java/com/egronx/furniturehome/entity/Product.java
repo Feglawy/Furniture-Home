@@ -23,11 +23,11 @@ public class Product {
     String name;
     @Column(name = "description")
     String description;
-    @Column(name = "price" , nullable = false , precision = 10, scale = 2)
+    @Column(name = "price" , nullable = false)
     double price;
-    @Column(name = "discount" , nullable = false , precision = 5, scale = 2)
+    @Column(name = "discount" , nullable = false)
     double discount = 0;
-    @Column(name = "final_price" , nullable = false , precision = 10, scale = 2 , updatable = false , insertable = false)
+    @Column(name = "final_price" , nullable = false , updatable = false , insertable = false)
     double finalPrice;
     @Column(name = "stock" , nullable = false)
     Long stock = 0L;

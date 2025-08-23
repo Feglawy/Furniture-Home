@@ -17,13 +17,13 @@ public class Enquiry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "content" , nullable = false)
-    String content;
+    private String content;
     @Column(name = "admin_reply" , nullable = false)
-    String adminReply;
+    private String adminReply;
     @Column(name = "closed")
-    boolean closed;
+    private boolean closed;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id" , nullable = false)
-    User user;
+    private User user;
 }

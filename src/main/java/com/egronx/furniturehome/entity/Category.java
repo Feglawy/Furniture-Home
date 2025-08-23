@@ -21,9 +21,9 @@ public class Category {
     private Long id;
 
     @Column(nullable = false , unique = true)
-    String name;
+    private String name;
 
     @OneToMany(mappedBy = "category" , fetch = FetchType.LAZY)
-    Set<Product> products = new HashSet<>();
+    private Set<Product> products = new HashSet<>();
 
 }

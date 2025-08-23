@@ -20,14 +20,14 @@ public class CartProduct {
     private Long id;
 
     @Column(name = "quantity" , nullable = false)
-    int quantity = 1;
+    private int quantity = 1;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id" , nullable = false)
-    Cart cart;
+    private Cart cart;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id" , nullable = false)
-    Product product;
+    private Product product;
 
 }

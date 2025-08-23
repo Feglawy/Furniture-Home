@@ -22,9 +22,9 @@ public class Cart {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id" , nullable = false , unique = true)
-    User user;
+    private User user;
 
 
     @OneToMany(mappedBy = "cart" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
-    Set<CartProduct> cartProducts = new HashSet<>();
+    private Set<CartProduct> cartProducts = new HashSet<>();
 }

@@ -31,7 +31,7 @@ public class OrderProduct {
     @Column(name = "quantity" , nullable = false)
     private int quantity;
 
-    @Column(name = "unit_price", precision = 10, scale = 2, nullable = false)
+    @Column(name = "unit_price", nullable = false)
     private double unitPrice;
 
 
