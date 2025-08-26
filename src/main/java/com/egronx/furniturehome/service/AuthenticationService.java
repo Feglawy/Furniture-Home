@@ -2,6 +2,8 @@ package com.egronx.furniturehome.service;
 
 import com.egronx.furniturehome.dto.LoginRequest;
 import com.egronx.furniturehome.dto.LoginResponse;
+import com.egronx.furniturehome.dto.PasswordResetConfirmRequest;
+import com.egronx.furniturehome.dto.PasswordResetRequest;
 import com.egronx.furniturehome.dto.SignupRequest;
 import com.egronx.furniturehome.dto.UserResponse;
 import com.egronx.furniturehome.entity.User;
@@ -19,8 +21,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -32,6 +36,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     /**
      * Register a new user
@@ -88,5 +93,45 @@ public class AuthenticationService {
                 .build();
     }
 
+    /**
+     * Request password reset
+     * @param request password reset request
+     */
+    public void requestPasswordReset(PasswordResetRequest request) {
+        User user = userService.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found with this email"));
+
+        // Generate reset token
+        String resetToken = UUID.randomUUID().toString();
+        LocalDateTime expiryTime = LocalDateTime.now().plusHours(1); // Token expires in 1 hour
+
+        // Save reset token to user
+        user.setResetToken(resetToken);
+        user.setResetTokenExpiry(expiryTime);
+        userRepository.save(user);
+
+        // Send reset email
+        emailService.sendPasswordResetEmail(user.getEmail(), resetToken);
+    }
+
+    /**
+     * Confirm password reset
+     * @param request password reset confirmation request
+     */
+    public void confirmPasswordReset(PasswordResetConfirmRequest request) {
+        User user = userRepository.findByResetToken(request.getToken())
+                .orElseThrow(() -> new RuntimeException("Invalid or expired reset token"));
+
+        // Check if token is expired
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Reset token has expired");
+        }
+
+        // Update password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        userRepository.save(user);
+    }
 
 } 

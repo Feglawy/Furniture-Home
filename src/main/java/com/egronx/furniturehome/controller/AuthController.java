@@ -3,6 +3,8 @@ package com.egronx.furniturehome.controller;
 import com.egronx.furniturehome.dto.LoginRequest;
 import com.egronx.furniturehome.dto.LoginResponse;
 import com.egronx.furniturehome.dto.MessageResponse;
+import com.egronx.furniturehome.dto.PasswordResetConfirmRequest;
+import com.egronx.furniturehome.dto.PasswordResetRequest;
 import com.egronx.furniturehome.dto.SignupRequest;
 import com.egronx.furniturehome.dto.UserResponse;
 import com.egronx.furniturehome.service.AuthenticationService;
@@ -67,5 +69,57 @@ public class AuthController {
         return ResponseEntity.ok(MessageResponse.builder()
                 .message("Logged out successfully")
                 .build());
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<MessageResponse> requestPasswordReset(@Valid @RequestBody PasswordResetRequest request) {
+        try {
+            authenticationService.requestPasswordReset(request);
+            return ResponseEntity.ok(MessageResponse.builder()
+                    .message("Reset link sent")
+                    .build());
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MessageResponse.builder()
+                        .message("User not found with this email")
+                        .build());
+            }
+            return ResponseEntity.badRequest().body(MessageResponse.builder()
+                    .message(e.getMessage())
+                    .build());
+        }
+    }
+
+    @PostMapping("/reset-password/confirm")
+    public ResponseEntity<MessageResponse> confirmPasswordReset(@Valid @RequestBody PasswordResetConfirmRequest request) {
+        try {
+            authenticationService.confirmPasswordReset(request);
+            return ResponseEntity.ok(MessageResponse.builder()
+                    .message("Password reset successfully")
+                    .build());
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Invalid or expired")) {
+                return ResponseEntity.badRequest().body(MessageResponse.builder()
+                        .message("Invalid or expired reset token")
+                        .build());
+            }
+            return ResponseEntity.badRequest().body(MessageResponse.builder()
+                    .message(e.getMessage())
+                    .build());
+        }
+    }
+
+    @GetMapping("/debug/user/{email}")
+    public ResponseEntity<?> debugUser(@PathVariable String email) {
+        try {
+            // This is a debug endpoint to check if user exists
+            return ResponseEntity.ok(MessageResponse.builder()
+                    .message("Debug endpoint - check application logs for user existence")
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(MessageResponse.builder()
+                    .message("Error: " + e.getMessage())
+                    .build());
+        }
     }
 } 

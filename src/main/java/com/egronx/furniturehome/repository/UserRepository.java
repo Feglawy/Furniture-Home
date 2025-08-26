@@ -22,4 +22,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return true if user exists, false otherwise
      */
     boolean existsByEmail(String email);
+    
+    /**
+     * Find user by reset token
+     * @param resetToken reset token
+     * @return Optional containing user if found
+     */
+    Optional<User> findByResetToken(String resetToken);
 } 
