@@ -2,6 +2,7 @@ package com.egronx.furniturehome.service;
 
 import com.egronx.furniturehome.entity.Category;
 import com.egronx.furniturehome.repository.CategoryRepository;
+import com.egronx.furniturehome.validations.CategoryValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,8 @@ public class CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
 
+    CategoryValidation categoryValidation = new CategoryValidation(categoryRepository);
+
 
     // List all categories
     public List<Category> getAllCategories() {
@@ -22,15 +25,17 @@ public class CategoryService {
     // CRUD for admin
 
     // Create New category + check for duplication or null name
-    public Category createCategory(Category category) {
+    public String createCategory(Category category) {
 
-        if(category.getName().isEmpty()) {
-            throw new IllegalArgumentException("Category name can not be empty");
+        try {
+            if (categoryValidation.validateCategoryName(category)) {
+                categoryRepository.save(category);
+                return "Category created";
+            }
+        } catch (IllegalArgumentException ex) {
+            return ex.getMessage();
         }
-        if (categoryRepository.existsByName(category.getName())) {
-            throw new IllegalArgumentException("Category already exists");
-        }
-        return categoryRepository.save(category);
+        return "Unexpected error";
     }
 
     // Read category
@@ -39,20 +44,29 @@ public class CategoryService {
     }
 
     // Update category + check if it exists first
-    public Category updateCategory(Category category) {
-        if(!categoryRepository.existsById(category.getId())) {
-            throw new RuntimeException("Category with id " + category.getId() + " is not found");
+    public String updateCategory(Category category) {
+        try {
+            if (categoryValidation.validateCategoryExist(category)){
+                categoryRepository.save(category);
+                return "Category updated successfully";
+            }
+        } catch (IllegalArgumentException ex){
+            return ex.getMessage();
         }
-        return categoryRepository.save(category);
+        return "Unexpected error";
     }
 
     // Delete category + check if it exists first
     public String deleteCategory(Long id) {
-        if(!categoryRepository.existsById(id)) {
-            throw new RuntimeException("Category with id " + id + " is not found");
+        try {
+            if (categoryValidation.validateCategoryIDExists(id)){
+                categoryRepository.deleteById(id);
+                return "Category deleted successfully";
+            }
+        } catch (IllegalArgumentException ex){
+            return ex.getMessage();
         }
-        categoryRepository.deleteById(id);
-        return "Category with id " + id + " was deleted";
+        return "Unexpected error";
     }
 
 }
