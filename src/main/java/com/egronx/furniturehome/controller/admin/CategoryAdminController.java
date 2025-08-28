@@ -21,7 +21,7 @@ public class CategoryAdminController {
         return categoryService.getAllCategories();
     }
     @PostMapping
-    public Category addCategory(@RequestBody Category category) {
+    public String addCategory(@RequestBody Category category) {
         return categoryService.createCategory(category);
     }
 
@@ -31,7 +31,7 @@ public class CategoryAdminController {
     }
 
     @PutMapping("/{id}")
-    public Category updateCategory(@PathVariable Long id, @RequestBody Category category) {
+    public String updateCategory(@PathVariable Long id, @RequestBody Category category) {
          category.setId(id);
         return categoryService.updateCategory(category);
     }
