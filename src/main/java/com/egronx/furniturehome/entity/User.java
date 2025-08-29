@@ -39,14 +39,23 @@ public class User {
     Set<Enquiry> enquiries = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.ALL , orphanRemoval = true)
     Set<Favorite> favorites = new HashSet<>();
 
-    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.ALL , orphanRemoval = true)
     Set<Review> reviews = new HashSet<>();
 
-    @OneToOne(mappedBy = "user" , fetch = FetchType.EAGER , cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToOne(mappedBy = "user" , fetch = FetchType.EAGER , cascade = CascadeType.REMOVE , orphanRemoval = true)
     Cart cart;
+
+
+    public void addFavorite(Favorite favorite){
+        favorites.add(favorite);
+    }
+
+    public void addReview(Review review){
+        reviews.add(review);
+    }
 
 
 }

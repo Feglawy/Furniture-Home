@@ -1,6 +1,7 @@
 package com.egronx.furniturehome.entity;
 
 
+import com.egronx.furniturehome.dto.CartProductDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,10 @@ public class Cart {
     private User user;
 
 
-    @OneToMany(mappedBy = "cart" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OneToMany(mappedBy = "cart" , fetch = FetchType.LAZY , cascade = CascadeType.ALL , orphanRemoval = true)
     private Set<CartProduct> cartProducts = new HashSet<>();
+
+    public void addCartProduct(CartProduct cartProduct) {
+        cartProducts.add(cartProduct);
+    }
 }
