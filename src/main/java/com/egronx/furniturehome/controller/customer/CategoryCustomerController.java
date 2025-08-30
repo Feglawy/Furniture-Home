@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-
+@RequestMapping("/categories")
 public class CategoryCustomerController {
 
     CategoryService categoryService;
@@ -18,7 +18,7 @@ public class CategoryCustomerController {
     }
 
     // list all categories
-    @GetMapping("/categories")
+    @GetMapping
     public List<Category> getAllCategories() {
         return categoryService.getAllCategories();
     }

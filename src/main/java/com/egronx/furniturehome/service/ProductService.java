@@ -1,12 +1,8 @@
 package com.egronx.furniturehome.service;
 
 import com.egronx.furniturehome.entity.Product;
-import com.egronx.furniturehome.repository.CategoryRepository;
 import com.egronx.furniturehome.repository.ProductRepository;
-import com.egronx.furniturehome.validations.CategoryValidation;
 import com.egronx.furniturehome.validations.ProductValidation;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

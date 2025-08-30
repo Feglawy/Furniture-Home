@@ -58,8 +58,8 @@ public class ProductValidation {
     }
 
     private Boolean validatePrice(double price) {
-        if (price < 0 ) {
-            throw new IllegalArgumentException("Product price cannot be negative");
+        if (price <= 0 ) {
+            throw new IllegalArgumentException("Product price cannot be less than 1$");
         }
         return true;
     }
