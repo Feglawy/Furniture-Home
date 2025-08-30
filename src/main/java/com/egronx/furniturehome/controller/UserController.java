@@ -8,6 +8,7 @@ import com.egronx.furniturehome.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getUserProfile(@PathVariable Long id,
                                             @AuthenticationPrincipal MyUserDetails userDetails) {
         try {
@@ -43,6 +45,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> updateUserProfile(
             @PathVariable Long id,
             @AuthenticationPrincipal MyUserDetails userDetails,

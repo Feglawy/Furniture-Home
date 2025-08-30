@@ -3,12 +3,14 @@ package com.egronx.furniturehome.controller;
 import com.egronx.furniturehome.entity.Favorite;
 import com.egronx.furniturehome.service.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/favorite")
+@PreAuthorize("isAuthenticated()")
 public class FavoriteController {
 
     final

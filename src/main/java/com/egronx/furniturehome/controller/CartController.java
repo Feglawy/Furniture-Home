@@ -4,12 +4,14 @@ import com.egronx.furniturehome.dto.CartProductDTO;
 import com.egronx.furniturehome.entity.CartProduct;
 import com.egronx.furniturehome.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/cart")
+@PreAuthorize("isAuthenticated()")
 public class CartController {
 
     final

@@ -8,6 +8,7 @@ import com.egronx.furniturehome.security.MyUserDetails;
 import com.egronx.furniturehome.service.CheckoutService;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("cart/checkout")
+@PreAuthorize("isAuthenticated()")
 public class CheckoutController {
     private final CheckoutService checkoutService;
 

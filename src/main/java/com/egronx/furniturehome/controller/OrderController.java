@@ -11,6 +11,7 @@ import com.egronx.furniturehome.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/orders")
+@PreAuthorize("isAuthenticated()")
 public class OrderController {
     OrderService orderService;
 
@@ -50,8 +52,9 @@ public class OrderController {
             return ResponseEntity.badRequest().body("access denied or Order id not found");
         }
     }
-    // TODO: Authorization ADMIN
+
     @PutMapping("/id/status") // update the status only admin can update the order
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@RequestBody StatusChangeRequest status,
                         @AuthenticationPrincipal MyUserDetails userDetails) {
         orderService.ChangeOrderStatus(userDetails.getId(), status.getStatus());
