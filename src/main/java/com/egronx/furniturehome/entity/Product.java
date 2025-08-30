@@ -1,5 +1,6 @@
 package com.egronx.furniturehome.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,6 +41,7 @@ public class Product {
     Set<ProductImage> images = new HashSet<>();
 
     @OneToMany(mappedBy = "product" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @JsonIgnore
     Set<Favorite> favorites = new HashSet<>();
 
     @OneToMany(mappedBy = "product" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)

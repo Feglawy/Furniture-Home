@@ -1,8 +1,10 @@
 package com.egronx.furniturehome.service;
 
 import com.egronx.furniturehome.entity.Product;
+import com.egronx.furniturehome.repository.ProductImageRepository;
 import com.egronx.furniturehome.repository.ProductRepository;
 import com.egronx.furniturehome.validations.ProductValidation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductValidation productValidation;
+    @Autowired
+    ProductImageRepository productImageRepository;
 
     public ProductService(ProductRepository productRepository, ProductValidation productValidation) {
         this.productRepository = productRepository;
@@ -53,6 +57,8 @@ public class ProductService {
     // delete product
     public String deleteProduct(Long id) {
         productValidation.validateDeleteProduct(id);
+
+        productImageRepository.deleteAllByProductId(id);
 
         productRepository.deleteById(id);
         return "Product deleted successfully";
