@@ -30,6 +30,12 @@ public class User {
     @Column(name = "location")
     String location;
 
+    @Column(name = "reset_token")
+    String resetToken;
+    
+    @Column(name = "reset_token_expiry")
+    java.time.LocalDateTime resetTokenExpiry;
+
     @JoinColumn(name = "role_id" , nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     UserRole role;
@@ -39,14 +45,23 @@ public class User {
     Set<Enquiry> enquiries = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.ALL , orphanRemoval = true)
     Set<Favorite> favorites = new HashSet<>();
 
-    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , cascade = CascadeType.ALL , orphanRemoval = true)
     Set<Review> reviews = new HashSet<>();
 
-    @OneToOne(mappedBy = "user" , fetch = FetchType.EAGER , cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToOne(mappedBy = "user" , fetch = FetchType.EAGER , cascade = CascadeType.REMOVE , orphanRemoval = true)
     Cart cart;
+
+
+    public void addFavorite(Favorite favorite){
+        favorites.add(favorite);
+    }
+
+    public void addReview(Review review){
+        reviews.add(review);
+    }
 
 
 }
