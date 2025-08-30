@@ -30,6 +30,12 @@ public class User {
     @Column(name = "location")
     String location;
 
+    @Column(name = "reset_token")
+    String resetToken;
+    
+    @Column(name = "reset_token_expiry")
+    java.time.LocalDateTime resetTokenExpiry;
+
     @JoinColumn(name = "role_id" , nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     UserRole role;
