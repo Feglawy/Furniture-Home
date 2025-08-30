@@ -46,12 +46,4 @@ public class OrderService {
             statusRepo.save(orderStatusChanges);
         }
     }
-
-    public void CancelOrder(Long OrderId) {
-        this.ChangeOrderStatus(OrderId, OrderStatus.CANCELLED);
-    }
-
-    public List<OrderStatusChanges> FindOrderStatusChanges(Long orderId) {
-        return statusRepo.findAllByOrderId(orderId);
-    }
 }

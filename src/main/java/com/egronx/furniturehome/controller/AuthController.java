@@ -1,12 +1,12 @@
 package com.egronx.furniturehome.controller;
 
-import com.egronx.furniturehome.dto.LoginRequest;
-import com.egronx.furniturehome.dto.LoginResponse;
-import com.egronx.furniturehome.dto.MessageResponse;
-import com.egronx.furniturehome.dto.PasswordResetConfirmRequest;
-import com.egronx.furniturehome.dto.PasswordResetRequest;
-import com.egronx.furniturehome.dto.SignupRequest;
-import com.egronx.furniturehome.dto.UserResponse;
+import com.egronx.furniturehome.dto.Request.LoginRequest;
+import com.egronx.furniturehome.dto.Response.LoginResponse;
+import com.egronx.furniturehome.dto.Response.MessageResponse;
+import com.egronx.furniturehome.dto.Request.PasswordResetConfirmRequest;
+import com.egronx.furniturehome.dto.Request.PasswordResetRequest;
+import com.egronx.furniturehome.dto.Request.SignupRequest;
+import com.egronx.furniturehome.dto.Response.UserResponse;
 import com.egronx.furniturehome.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

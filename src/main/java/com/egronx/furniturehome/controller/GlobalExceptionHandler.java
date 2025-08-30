@@ -1,6 +1,6 @@
 package com.egronx.furniturehome.controller;
 
-import com.egronx.furniturehome.dto.MessageResponse;
+import com.egronx.furniturehome.dto.Response.MessageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;

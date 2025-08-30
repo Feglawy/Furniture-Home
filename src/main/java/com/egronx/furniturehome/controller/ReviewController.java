@@ -12,8 +12,11 @@ import java.util.List;
 @RequestMapping("api/reviews")
 public class ReviewController {
 
-    @Autowired
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
+
+    public ReviewController(ReviewService reviewService) {
+        this.reviewService = reviewService;
+    }
 
     @PostMapping
     public void addReview(@RequestBody ReviewDTO reviewDTO) {
