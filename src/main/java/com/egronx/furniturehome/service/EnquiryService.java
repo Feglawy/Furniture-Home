@@ -1,10 +1,13 @@
 package com.egronx.furniturehome.service;
 
+import com.egronx.furniturehome.dto.Response.EnquiryResponseDTO;
 import com.egronx.furniturehome.entity.Enquiry;
 import com.egronx.furniturehome.entity.User;
 import com.egronx.furniturehome.repository.EnquiryRepository;
+import com.egronx.furniturehome.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,29 +15,36 @@ import java.util.Optional;
 public class EnquiryService {
 
     private final EnquiryRepository enquiryRepository;
+    private final UserRepository userRepository;
 
-    public EnquiryService(EnquiryRepository enquiryRepository) {
+    public EnquiryService(EnquiryRepository enquiryRepository, UserRepository userRepository) {
         this.enquiryRepository = enquiryRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<Enquiry> getAllEnquiries() {
-        return enquiryRepository.findAll();
+    public List<EnquiryResponseDTO> getAllEnquiries() {
+
+        List<Enquiry> enquiries = enquiryRepository.findAll();
+        List<EnquiryResponseDTO> enquiriesDTO = new ArrayList<>();
+        for (Enquiry enquiry : enquiries) {
+            enquiriesDTO.add(mapToDTO(enquiry));
+        }
+        return enquiriesDTO;
     }
 
-    public Optional<Enquiry> getEnquiryById(Long id) {
-        return enquiryRepository.findById(id);
+    public EnquiryResponseDTO getEnquiryById(Long id) {
+        Enquiry enquiry = enquiryRepository.findById(id).orElseThrow(()-> new RuntimeException("Not found"));
+        return mapToDTO(enquiry);
     }
 
-    // الميثود القديمة
     public Enquiry createEnquiry(Enquiry enquiry) {
         return enquiryRepository.save(enquiry);
     }
 
-    // الميثود الجديدة (عشان الكود في الـ Controller يشتغل)
-    public Enquiry createEnquiry(String content, User user) {
+    public Enquiry createEnquiry(String content, Long userId) {
         Enquiry enquiry = new Enquiry();
         enquiry.setContent(content);
-        enquiry.setUser(user);
+        enquiry.setUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found!")));
         enquiry.setClosed(false);
         return enquiryRepository.save(enquiry);
     }
@@ -54,18 +64,28 @@ public class EnquiryService {
     }
 
     // للرد على استعلام
-    public Enquiry replyToEnquiry(Long id, String reply) {
-        return enquiryRepository.findById(id).map(enquiry -> {
-            enquiry.setAdminReply(reply);
-            return enquiryRepository.save(enquiry);
-        }).orElseThrow(() -> new RuntimeException("Enquiry not found with id " + id));
+    public EnquiryResponseDTO replyToEnquiry(Long id, String reply) {
+        Enquiry enquiry = enquiryRepository.findById(id).orElseThrow(() -> new RuntimeException("Enquiry not found with id " + id));
+        enquiry.setAdminReply(reply);
+        enquiryRepository.save(enquiry);
+        return mapToDTO(enquiry);
     }
 
     // لإغلاق استعلام
-    public Enquiry closeEnquiry(Long id) {
-        return enquiryRepository.findById(id).map(enquiry -> {
-            enquiry.setClosed(true);
-            return enquiryRepository.save(enquiry);
-        }).orElseThrow(() -> new RuntimeException("Enquiry not found with id " + id));
+    public EnquiryResponseDTO closeEnquiry(Long id) {
+        Enquiry enquiry = enquiryRepository.findById(id).orElseThrow(() -> new RuntimeException("Enquiry not found with id " + id));
+        enquiry.setClosed(true);
+        enquiryRepository.save(enquiry);
+        return mapToDTO(enquiry);
+    }
+
+    private EnquiryResponseDTO mapToDTO(Enquiry enquiry) {
+        return EnquiryResponseDTO.builder()
+                .id(enquiry.getId())
+                .userId(enquiry.getUser().getId())
+                .content(enquiry.getContent())
+                .adminReply(enquiry.getAdminReply())
+                .closed(enquiry.isClosed())
+                .build();
     }
 }
