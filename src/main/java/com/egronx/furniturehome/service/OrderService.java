@@ -2,12 +2,14 @@ package com.egronx.furniturehome.service;
 
 import com.egronx.furniturehome.entity.Order;
 import com.egronx.furniturehome.entity.OrderStatus;
+import com.egronx.furniturehome.entity.OrderStatusChanges;
 import com.egronx.furniturehome.repository.OrderProductRepository;
 import com.egronx.furniturehome.repository.OrderRepository;
 import com.egronx.furniturehome.repository.OrderStatusChangesRepository;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +39,11 @@ public class OrderService {
         if  (order != null) {
             order.setStatus(orderStatus);
             orderRepo.save(order);
+            OrderStatusChanges orderStatusChanges = OrderStatusChanges.builder()
+                    .order(order)
+                    .status(orderStatus)
+                    .build();
+            statusRepo.save(orderStatusChanges);
         }
     }
 
@@ -44,11 +51,7 @@ public class OrderService {
         this.ChangeOrderStatus(OrderId, OrderStatus.CANCELLED);
     }
 
-    public void CreateOrder(Order order) {
-        orderRepo.save(order);
-    }
-
-    public void DeleteOrder(Long OrderId) {
-        orderRepo.delete(orderRepo.findById(OrderId));
+    public List<OrderStatusChanges> FindOrderStatusChanges(Long orderId) {
+        return statusRepo.findAllByOrderId(orderId);
     }
 }
