@@ -10,10 +10,12 @@ import com.egronx.furniturehome.repository.ProductRepository;
 import com.egronx.furniturehome.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CartService {
@@ -31,7 +33,7 @@ public class CartService {
 
     public List<CartProduct> getCartItems() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
         Cart cart = user.getCart();
         List<CartProduct> cartProducts;
         cartProducts = new ArrayList<>(cart.getCartProducts());
@@ -40,7 +42,7 @@ public class CartService {
 
     public void addCartItem(CartProductDTO cartProductDTO) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
         Cart cart = user.getCart();
         Product product = productRepository.findById(cartProductDTO.getProductId());
         CartProduct cartProduct = new CartProduct();
@@ -53,9 +55,9 @@ public class CartService {
 
     public void removeItem(Long id) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
         Cart cart = user.getCart();
-        cart.getCartProducts().removeIf(cartProduct -> cartProduct.getProduct().getId() == id);
+        cart.getCartProducts().removeIf(cartProduct -> Objects.equals(cartProduct.getProduct().getId(), id));
         cartRepository.save(cart);
     }
 }

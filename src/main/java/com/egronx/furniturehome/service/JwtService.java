@@ -1,5 +1,6 @@
 package com.egronx.furniturehome.service;
 
+import com.egronx.furniturehome.security.MyUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -55,11 +56,13 @@ public class JwtService {
     
     /**
      * Generate JWT token for user
-     * @param userDetails user details
      * @return JWT token
      */
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(MyUserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", userDetails.getId());
+        claims.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
+        return generateToken(claims, userDetails);
     }
     
     /**
@@ -68,7 +71,7 @@ public class JwtService {
      * @param userDetails user details
      * @return JWT token
      */
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, MyUserDetails userDetails) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

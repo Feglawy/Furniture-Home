@@ -8,6 +8,7 @@ import com.egronx.furniturehome.dto.SignupRequest;
 import com.egronx.furniturehome.dto.UserResponse;
 import com.egronx.furniturehome.entity.User;
 import com.egronx.furniturehome.repository.UserRepository;
+import com.egronx.furniturehome.security.MyUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -78,7 +79,7 @@ public class AuthenticationService {
         );
 
         // Get user details
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         
         // Generate JWT token
         String token = jwtService.generateToken(userDetails);

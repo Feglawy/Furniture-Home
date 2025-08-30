@@ -6,8 +6,8 @@ import com.egronx.furniturehome.entity.User;
 import com.egronx.furniturehome.entity.UserRole;
 import com.egronx.furniturehome.repository.UserRepository;
 import com.egronx.furniturehome.repository.UserRoleRepository;
+import com.egronx.furniturehome.security.MyUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,15 +24,11 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public MyUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
         
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .roles(user.getRole().getName())
-                .build();
+        return new MyUserDetails(user);
     }
     
     public User createUser(User user) {
