@@ -35,13 +35,14 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
+//    @JsonIgnore
     Category category;
 
     @OneToMany(mappedBy = "product" , cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JsonIgnore
     Set<ProductImage> images = new HashSet<>();
 
     @OneToMany(mappedBy = "product" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)
-    @JsonIgnore
     Set<Favorite> favorites = new HashSet<>();
 
     @OneToMany(mappedBy = "product" , fetch = FetchType.LAZY , cascade = CascadeType.REMOVE , orphanRemoval = true)

@@ -1,9 +1,7 @@
 package com.egronx.furniturehome.controller.admin;
 
-import com.egronx.furniturehome.entity.Category;
 import com.egronx.furniturehome.entity.ProductImage;
 import com.egronx.furniturehome.service.ProductImageService;
-import jakarta.persistence.Entity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +26,6 @@ public class ProductImageAdminController {
         String result = productImageService.addProductImage(productImage);
         return ResponseEntity.ok(result);
 
-    }
-
-    @GetMapping("/{id}")
-    public ProductImage showProductImage(@PathVariable Long id) {
-        return productImageService.viewImage(id);
     }
 
     @PutMapping("/{id}")
