@@ -2,7 +2,9 @@ package com.egronx.furniturehome.validations;
 
 import com.egronx.furniturehome.entity.Category;
 import com.egronx.furniturehome.repository.CategoryRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CategoryValidation {
     CategoryRepository categoryRepository;
 
@@ -20,15 +22,9 @@ public class CategoryValidation {
         return true;
     }
 
-    public Boolean validateCategoryExist(Category category) {
-        if(!categoryRepository.existsById(category.getId())) {
-            throw new RuntimeException("Category with id " + category.getId() + " is not found");
-        }
-        return true;
-    }
-    public Boolean validateCategoryIDExists(Long id) {
+    public Boolean validateCategoryExists(Long id) {
         if(!categoryRepository.existsById(id)) {
-            throw new RuntimeException("Category with id " + id + " is not found");
+            throw new IllegalArgumentException("Category with id " + id + " is not found");
         }
         return true;
     }

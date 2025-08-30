@@ -3,7 +3,6 @@ package com.egronx.furniturehome.controller.admin;
 import com.egronx.furniturehome.entity.Product;
 import com.egronx.furniturehome.service.ProductService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

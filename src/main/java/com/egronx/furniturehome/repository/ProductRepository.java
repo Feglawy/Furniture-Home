@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByName(String name);
     Product findById(Long id);
+    void deleteAllByCategoryId(Long id);
 }

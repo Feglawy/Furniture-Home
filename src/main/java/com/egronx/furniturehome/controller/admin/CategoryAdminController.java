@@ -2,7 +2,7 @@ package com.egronx.furniturehome.controller.admin;
 
 import com.egronx.furniturehome.entity.Category;
 import com.egronx.furniturehome.service.CategoryService;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +20,11 @@ public class CategoryAdminController {
     public List<Category> listAllCategories() {
         return categoryService.getAllCategories();
     }
+
     @PostMapping
-    public String addCategory(@RequestBody Category category) {
-        return categoryService.createCategory(category);
+    public ResponseEntity<String> addCategory(@RequestBody Category category) {
+        String result = categoryService.createCategory(category);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}")
@@ -31,14 +33,15 @@ public class CategoryAdminController {
     }
 
     @PutMapping("/{id}")
-    public String updateCategory(@PathVariable Long id, @RequestBody Category category) {
-         category.setId(id);
-        return categoryService.updateCategory(category);
+    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody Category category) {
+        String result = categoryService.updateCategory(category, id);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteCategory(@PathVariable Long id) {
-        return categoryService.deleteCategory(id);
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
+        String result = categoryService.deleteCategory(id);
+        return ResponseEntity.ok(result);
     }
 
 }
