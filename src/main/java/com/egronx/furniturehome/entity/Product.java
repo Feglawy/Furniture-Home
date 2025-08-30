@@ -35,7 +35,6 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-//    @JsonIgnore
     Category category;
 
     @OneToMany(mappedBy = "product" , cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)

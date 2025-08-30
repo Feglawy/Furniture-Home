@@ -44,7 +44,7 @@ public class CartService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
         Cart cart = user.getCart();
-        Product product = productRepository.findById(cartProductDTO.getProductId());
+        Product product = productRepository.findById(cartProductDTO.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
         CartProduct cartProduct = new CartProduct();
         cartProduct.setProduct(product);
         cartProduct.setQuantity(cartProductDTO.getQuantity());

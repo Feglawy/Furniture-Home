@@ -37,7 +37,7 @@ public class FavoriteService {
     public void addFavorite(Long productId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found"));
-        Product product = productRepository.findById(productId);
+        Product product = productRepository.findById(productId).orElseThrow(()->new RuntimeException("Product not found"));
         Favorite favorite = new Favorite();
         favorite.setUser(user);
         favorite.setProduct(product);
