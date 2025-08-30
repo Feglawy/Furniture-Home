@@ -1,32 +1,23 @@
 package com.egronx.furniturehome.service;
 
-import com.egronx.furniturehome.dto.LoginRequest;
-import com.egronx.furniturehome.dto.LoginResponse;
-import com.egronx.furniturehome.dto.PasswordResetConfirmRequest;
-import com.egronx.furniturehome.dto.PasswordResetRequest;
-import com.egronx.furniturehome.dto.SignupRequest;
-import com.egronx.furniturehome.dto.UserResponse;
+import com.egronx.furniturehome.dto.Request.LoginRequest;
+import com.egronx.furniturehome.dto.Response.LoginResponse;
+import com.egronx.furniturehome.dto.Request.PasswordResetConfirmRequest;
+import com.egronx.furniturehome.dto.Request.PasswordResetRequest;
+import com.egronx.furniturehome.dto.Request.SignupRequest;
+import com.egronx.furniturehome.dto.Response.UserResponse;
 import com.egronx.furniturehome.entity.User;
 import com.egronx.furniturehome.repository.UserRepository;
 import com.egronx.furniturehome.security.MyUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor

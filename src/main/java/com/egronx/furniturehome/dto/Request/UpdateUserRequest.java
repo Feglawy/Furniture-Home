@@ -1,4 +1,4 @@
-package com.egronx.furniturehome.dto;
+package com.egronx.furniturehome.dto.Request;
 
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

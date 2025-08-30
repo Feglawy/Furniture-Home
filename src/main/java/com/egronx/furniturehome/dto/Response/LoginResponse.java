@@ -1,4 +1,4 @@
-package com.egronx.furniturehome.dto;
+package com.egronx.furniturehome.dto.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

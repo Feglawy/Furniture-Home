@@ -11,8 +11,12 @@ import java.util.List;
 @RequestMapping("api/favorite")
 public class FavoriteController {
 
-    @Autowired
+    final
     FavoriteService favoriteService;
+
+    public FavoriteController(FavoriteService favoriteService) {
+        this.favoriteService = favoriteService;
+    }
 
 
     @GetMapping

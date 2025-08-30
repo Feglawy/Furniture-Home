@@ -1,7 +1,7 @@
 package com.egronx.furniturehome.service;
 
-import com.egronx.furniturehome.dto.UpdateUserRequest;
-import com.egronx.furniturehome.dto.UserResponse;
+import com.egronx.furniturehome.dto.Request.UpdateUserRequest;
+import com.egronx.furniturehome.dto.Response.UserResponse;
 import com.egronx.furniturehome.entity.User;
 import com.egronx.furniturehome.entity.UserRole;
 import com.egronx.furniturehome.repository.UserRepository;

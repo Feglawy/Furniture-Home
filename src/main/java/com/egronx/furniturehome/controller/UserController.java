@@ -1,16 +1,14 @@
 package com.egronx.furniturehome.controller;
 
-import com.egronx.furniturehome.dto.UpdateUserRequest;
-import com.egronx.furniturehome.dto.UserResponse;
-import com.egronx.furniturehome.dto.MessageResponse;
+import com.egronx.furniturehome.dto.Request.UpdateUserRequest;
+import com.egronx.furniturehome.dto.Response.UserResponse;
+import com.egronx.furniturehome.dto.Response.MessageResponse;
 import com.egronx.furniturehome.security.MyUserDetails;
 import com.egronx.furniturehome.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
