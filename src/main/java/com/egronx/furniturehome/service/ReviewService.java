@@ -28,7 +28,7 @@ public class ReviewService {
 
     public void addReview(ReviewDTO reviewDTO) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
         Product product = productRepository.findById(reviewDTO.getProductId());
         Review review = new Review();
         review.setUser(user);

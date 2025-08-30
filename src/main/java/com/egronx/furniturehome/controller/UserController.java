@@ -3,13 +3,17 @@ package com.egronx.furniturehome.controller;
 import com.egronx.furniturehome.dto.UpdateUserRequest;
 import com.egronx.furniturehome.dto.UserResponse;
 import com.egronx.furniturehome.dto.MessageResponse;
+import com.egronx.furniturehome.security.MyUserDetails;
 import com.egronx.furniturehome.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,14 +24,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserProfile(@PathVariable Long id) {
+    public ResponseEntity<?> getUserProfile(@PathVariable Long id,
+                                            @AuthenticationPrincipal MyUserDetails userDetails) {
         try {
             // Check if the authenticated user is requesting their own profile
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String currentUserEmail = authentication.getName();
-            
-            // For now, we'll allow users to get any profile
-            // In a real application, you might want to restrict this
+            if (!Objects.equals(id, userDetails.getId())) {
+                return ResponseEntity.badRequest().body(MessageResponse.builder().message("Unauthorized").build());
+            }
+
             UserResponse user = userService.getUserProfile(id);
             return ResponseEntity.ok(user);
         } catch (RuntimeException e) {
@@ -43,14 +47,13 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUserProfile(
             @PathVariable Long id,
+            @AuthenticationPrincipal MyUserDetails userDetails,
             @Valid @RequestBody UpdateUserRequest request) {
         try {
             // Check if the authenticated user is updating their own profile
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String currentUserEmail = authentication.getName();
-            
-            // For now, we'll allow users to update any profile
-            // In a real application, you might want to restrict this
+            if (!Objects.equals(id, userDetails.getId())) {
+                return ResponseEntity.badRequest().body(MessageResponse.builder().message("Unauthorized").build());
+            }
             UserResponse updatedUser = userService.updateUser(id, request);
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
