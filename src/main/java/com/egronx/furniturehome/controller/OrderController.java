@@ -2,24 +2,18 @@ package com.egronx.furniturehome.controller;
 
 import com.egronx.furniturehome.dto.Request.StatusChangeRequest;
 import com.egronx.furniturehome.dto.Response.OrderDTO;
-import com.egronx.furniturehome.dto.Response.OrderProductDTO;
-import com.egronx.furniturehome.dto.Response.OrderStatusChangeDTO;
 import com.egronx.furniturehome.entity.Order;
-import com.egronx.furniturehome.repository.OrderRepository;
 import com.egronx.furniturehome.security.MyUserDetails;
 import com.egronx.furniturehome.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -55,7 +49,7 @@ public class OrderController {
 
     @PutMapping("/id/status") // update the status only admin can update the order
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> update(@RequestBody StatusChangeRequest status,
+    public ResponseEntity<?> update(@Valid @RequestBody StatusChangeRequest status,
                         @AuthenticationPrincipal MyUserDetails userDetails) {
         orderService.ChangeOrderStatus(userDetails.getId(), status.getStatus());
         return ResponseEntity.ok().build();

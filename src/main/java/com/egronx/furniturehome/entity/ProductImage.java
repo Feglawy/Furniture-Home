@@ -1,5 +1,6 @@
 package com.egronx.furniturehome.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,5 +22,6 @@ public class ProductImage {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id" , nullable = false)
+//    @JsonIgnore
     Product product;
 }

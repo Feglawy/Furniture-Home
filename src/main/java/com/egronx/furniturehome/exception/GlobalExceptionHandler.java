@@ -1,4 +1,4 @@
-package com.egronx.furniturehome.controller;
+package com.egronx.furniturehome.exception;
 
 import com.egronx.furniturehome.dto.Response.MessageResponse;
 import org.springframework.http.HttpStatus;

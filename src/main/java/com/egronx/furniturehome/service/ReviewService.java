@@ -7,6 +7,7 @@ import com.egronx.furniturehome.entity.Review;
 import com.egronx.furniturehome.entity.User;
 import com.egronx.furniturehome.repository.ProductRepository;
 import com.egronx.furniturehome.repository.UserRepository;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,10 @@ public class ReviewService {
         this.productRepository = productRepository;
     }
 
-    public void addReview(ReviewDTO reviewDTO) {
+    public void addReview(ReviewDTO reviewDTO) throws BadRequestException {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
-        Product product = productRepository.findById(reviewDTO.getProductId());
+        Product product = productRepository.findById(reviewDTO.getProductId()).orElseThrow(()-> new BadRequestException("Product not found"));
         Review review = new Review();
         review.setUser(user);
         review.setProduct(product);
@@ -40,7 +41,7 @@ public class ReviewService {
     }
 
     public List<ReviewDTO> getReviews(Long productId) {
-        Product product = productRepository.findById(productId);
+        Product product = productRepository.findById(productId).orElseThrow(()-> new RuntimeException("Product not found"));
         List<Review> reviews = new ArrayList<>(product.getReviews());
         List<ReviewDTO> reviewDTOs = new ArrayList<>(reviews.size());
         for (Review review : reviews) {

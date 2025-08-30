@@ -1,13 +1,10 @@
 package com.egronx.furniturehome.controller;
 
 import com.egronx.furniturehome.dto.ReviewDTO;
-import com.egronx.furniturehome.entity.Review;
 import com.egronx.furniturehome.service.ReviewService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/reviews")
@@ -21,12 +18,21 @@ public class ReviewController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public void addReview(@RequestBody ReviewDTO reviewDTO) {
-        reviewService.addReview(reviewDTO);
+    public ResponseEntity<?> addReview(@RequestBody ReviewDTO reviewDTO) {
+        try {
+            reviewService.addReview(reviewDTO);
+            return ResponseEntity.accepted().build();
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public List<ReviewDTO> getReviews(@PathVariable Long id) {
-        return reviewService.getReviews(id);
+    public ResponseEntity<?> getReviews(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(reviewService.getReviews(id));
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

@@ -1,14 +1,14 @@
 package com.egronx.furniturehome.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -24,6 +24,8 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category" , fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Product> products = new HashSet<>();
+
 
 }

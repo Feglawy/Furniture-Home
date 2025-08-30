@@ -7,6 +7,7 @@ import com.egronx.furniturehome.entity.Order;
 import com.egronx.furniturehome.security.MyUserDetails;
 import com.egronx.furniturehome.service.CheckoutService;
 import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +31,7 @@ public class CheckoutController {
     public ResponseEntity<?> Checkout(@AuthenticationPrincipal MyUserDetails userDetails) {
        try {
            Order order = this.checkoutService.Checkout(userDetails.getId());
-           return ResponseEntity.ok().body(OrderDTO.parseOrder(order));
+           return ResponseEntity.status(HttpStatus.CREATED).body(OrderDTO.parseOrder(order));
        }catch (Exception e){
            return ResponseEntity.badRequest().body(e.getMessage());
        }
