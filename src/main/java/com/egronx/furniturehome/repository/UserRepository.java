@@ -29,4 +29,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return Optional containing user if found
      */
     Optional<User> findByResetToken(String resetToken);
-} 
+}
