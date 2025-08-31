@@ -6,7 +6,9 @@ import com.egronx.furniturehome.entity.Product;
 import com.egronx.furniturehome.entity.Review;
 import com.egronx.furniturehome.entity.User;
 import com.egronx.furniturehome.repository.ProductRepository;
+import com.egronx.furniturehome.repository.ReviewRepository;
 import com.egronx.furniturehome.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,29 +19,33 @@ import java.util.List;
 
 @Service
 public class ReviewService {
-
+    ReviewRepository reviewRepository;
     UserRepository userRepository;
     ProductRepository productRepository;
 
     @Autowired
-    public ReviewService(UserRepository userRepository, ProductRepository productRepository) {
+    public ReviewService(UserRepository userRepository, ProductRepository productRepository, ReviewRepository reviewRepository) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.reviewRepository = reviewRepository;
     }
 
+    @Transactional
     public void addReview(ReviewDTO reviewDTO) throws BadRequestException {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+
         Product product = productRepository.findById(reviewDTO.getProductId()).orElseThrow(()-> new BadRequestException("Product not found"));
+
         Review review = new Review();
         review.setUser(user);
         review.setProduct(product);
         review.setRating(reviewDTO.getRating());
         review.setComment(reviewDTO.getComment());
-        user.addReview(review);
-        userRepository.save(user);
+        reviewRepository.save(review);
     }
 
+    @Transactional
     public List<ReviewDTO> getReviews(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(()-> new RuntimeException("Product not found"));
         List<Review> reviews = new ArrayList<>(product.getReviews());
