@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/settings")
 public class StoreSettingsController {
 
-    @Autowired
-    private StoreSettingsService storeSettingsService;
+    private final StoreSettingsService storeSettingsService;
+
+    public StoreSettingsController(StoreSettingsService storeSettingsService) {
+        this.storeSettingsService = storeSettingsService;
+    }
 
 
     @GetMapping
@@ -23,13 +26,13 @@ public class StoreSettingsController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public StoreSettingsDTO saveStoreSettings(@RequestBody StoreSettingsDTO dto) {
-        return storeSettingsService.createStoreSettings(dto);
+        return storeSettingsService.createOrUpdateStoreSettings(dto);
     }
 
 
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     public StoreSettingsDTO updateStoreSettings(@RequestBody StoreSettingsDTO dto) {
-        return storeSettingsService.updateStoreSettings(dto);
+        return storeSettingsService.createOrUpdateStoreSettings(dto);
     }
 }

@@ -7,6 +7,7 @@ import com.egronx.furniturehome.dto.Request.PasswordResetRequest;
 import com.egronx.furniturehome.dto.Request.SignupRequest;
 import com.egronx.furniturehome.dto.Response.UserResponse;
 import com.egronx.furniturehome.entity.User;
+import com.egronx.furniturehome.entity.UserRole;
 import com.egronx.furniturehome.repository.UserRepository;
 import com.egronx.furniturehome.security.MyUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .password(request.getPassword())
+                .role(UserRole.builder().name(request.getRole().name()).build())
                 .build();
 
         User savedUser = userService.createUser(user);

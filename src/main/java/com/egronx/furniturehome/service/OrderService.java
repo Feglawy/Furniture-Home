@@ -1,11 +1,13 @@
 package com.egronx.furniturehome.service;
 
+import com.egronx.furniturehome.dto.Response.OrderDTO;
 import com.egronx.furniturehome.entity.Order;
 import com.egronx.furniturehome.entity.OrderStatus;
 import com.egronx.furniturehome.entity.OrderStatusChanges;
 import com.egronx.furniturehome.repository.OrderProductRepository;
 import com.egronx.furniturehome.repository.OrderRepository;
 import com.egronx.furniturehome.repository.OrderStatusChangesRepository;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +28,18 @@ public class OrderService {
         this.statusRepo = statusRepo;
     }
 
-    public List<Order> FindAllByCustomerId(Long customerId) {
-        return this.orderRepo.findAllByCustomerId(customerId);
+    @Transactional
+    public List<OrderDTO> FindAllByCustomerId(Long customerId) {
+        return orderRepo.findAllByCustomerId(customerId).stream().map(OrderDTO::parseOrder).toList();
     }
 
-    public Order FindById(Long id) {
-        return orderRepo.findById(id);
+    @Transactional
+    public OrderDTO FindById(Long id) {
+        Order order = orderRepo.findById(id);
+        return OrderDTO.parseOrder(order);
     }
 
+    @Transactional
     public void ChangeOrderStatus(Long orderId, OrderStatus orderStatus) {
         Order order = orderRepo.findById(orderId);
         if  (order != null) {
@@ -42,6 +48,7 @@ public class OrderService {
             OrderStatusChanges orderStatusChanges = OrderStatusChanges.builder()
                     .order(order)
                     .status(orderStatus)
+                    .createdAt(LocalDateTime.now())
                     .build();
             statusRepo.save(orderStatusChanges);
         }

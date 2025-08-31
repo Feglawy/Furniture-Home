@@ -28,10 +28,6 @@ public class ProductDTO {
 
     @NotNull
     @Positive
-    private Double finalPrice;
-
-    @NotNull
-    @Positive
     private Long stock;
 
     private String category;

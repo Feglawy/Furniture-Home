@@ -1,5 +1,6 @@
 package com.egronx.furniturehome.service;
 
+import com.egronx.furniturehome.dto.Response.OrderDTO;
 import com.egronx.furniturehome.entity.*;
 import com.egronx.furniturehome.repository.*;
 import jakarta.transaction.Transactional;
@@ -29,56 +30,59 @@ public class CheckoutService {
     }
 
     @Transactional
-    public Order Checkout(Long customerId) {
-        // get the users cart
-        Cart cart = cartRepo.findByUserId(customerId).orElseThrow(
-                () -> new RuntimeException("Cart not found")
-        );
+    public OrderDTO Checkout(Long customerId) {
+        // get the user's cart
+        Cart cart = cartRepo.findByUserId(customerId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
 
-        // get the products and their quantities inside the cart
         if (cart.getCartProducts().isEmpty()) {
             throw new RuntimeException("Cart is empty");
         }
 
         // create new order
-        Order order = Order.builder()
-                .customer(userRepo.findById(customerId).orElseThrow(
-                        () -> new RuntimeException("Customer not found")
-                ))
-                .status(OrderStatus.PENDING)
-                .createdAt(LocalDateTime.now())
-                .build();
+        Order order = new Order();
+        order.setCustomer(userRepo.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found")));
+        order.setStatus(OrderStatus.PENDING);
+        order.setCreatedAt(LocalDateTime.now());
+        // collections are already initialized in entity
         orderRepo.save(order);
 
         long totalPrice = 0L;
 
-        // convert cart product into order product
+        // convert cart products into order products
         for (CartProduct cartProduct : cart.getCartProducts()) {
             Product product = cartProduct.getProduct();
 
-            // check if the demanded quantities is available
             if (product.getStock() < cartProduct.getQuantity()) {
                 throw new RuntimeException("Not enough stock for product " + product.getName());
             }
-            // update the stock in product
+
+            // update stock
             product.setStock(product.getStock() - cartProduct.getQuantity());
             productRepo.save(product);
 
-            OrderProduct orderProduct = OrderProduct.builder()
-                    .order(order)
-                    .product(product)
-                    .quantity(cartProduct.getQuantity())
-                    .unitPrice(product.getFinalPrice())
-                    .build();
+            // create order product
+            OrderProduct orderProduct = new OrderProduct();
+            orderProduct.setOrder(order);
+            orderProduct.setProduct(product);
+            orderProduct.setQuantity(cartProduct.getQuantity());
+            orderProduct.setUnitPrice(product.getFinalPrice());
 
+            // add to order's collection
+            order.getOrderProducts().add(orderProduct);
             orderProductRepo.save(orderProduct);
-            totalPrice += (long) product.getFinalPrice();
+            totalPrice += (long) (product.getFinalPrice() * cartProduct.getQuantity());
         }
-        order.setTotalPrice(totalPrice);
-        orderRepo.save(order);
 
-        // clear the products in cart
-        cartProductRepo.deleteAll(cart.getCartProducts());
-        return order;
+        // update total price
+        order.setTotalPrice(totalPrice);
+        orderRepo.save(order); // cascades orderProducts
+
+        // clear the cart
+        cartProductRepo.emptyTheCart(customerId);
+
+        return OrderDTO.parseOrder(order);
     }
+
 }

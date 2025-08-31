@@ -8,5 +8,5 @@ import lombok.Data;
 @Builder
 public class ReplayDTO {
     @NotBlank
-    private String Reply;
+    private String reply;
 }

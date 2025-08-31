@@ -5,12 +5,14 @@ import com.egronx.furniturehome.dto.Request.ReplayDTO;
 import com.egronx.furniturehome.dto.Response.EnquiryResponseDTO;
 import com.egronx.furniturehome.entity.Enquiry;
 import com.egronx.furniturehome.entity.User;
+import com.egronx.furniturehome.security.MyUserDetails;
 import com.egronx.furniturehome.service.EnquiryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,10 +27,10 @@ public class EnquiryController {
 
     @PostMapping
     public ResponseEntity<Enquiry> createEnquiry(
-            @RequestParam Long userId,
+            @AuthenticationPrincipal MyUserDetails userDetails,
             @Valid @RequestBody EnquiryRequestDTO request) {
 
-        Enquiry enquiry = enquiryService.createEnquiry(request.getContent(), userId);
+        Enquiry enquiry = enquiryService.createEnquiry(request.getContent(), userDetails.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(enquiry);
     }
 

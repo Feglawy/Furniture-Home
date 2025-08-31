@@ -18,8 +18,10 @@ public class Enquiry {
     private Long id;
     @Column(name = "content" , nullable = false)
     private String content;
-    @Column(name = "admin_reply" , nullable = false)
+
+    @Column(name = "admin_reply")
     private String adminReply;
+
     @Column(name = "closed")
     private boolean closed;
 
