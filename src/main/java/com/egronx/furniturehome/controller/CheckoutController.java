@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("cart/checkout")
+@RequestMapping("api/cart/checkout")
 @PreAuthorize("isAuthenticated()")
 public class CheckoutController {
     private final CheckoutService checkoutService;
@@ -30,8 +30,7 @@ public class CheckoutController {
     @PostMapping
     public ResponseEntity<?> Checkout(@AuthenticationPrincipal MyUserDetails userDetails) {
        try {
-           Order order = this.checkoutService.Checkout(userDetails.getId());
-           return ResponseEntity.status(HttpStatus.CREATED).body(OrderDTO.parseOrder(order));
+           return ResponseEntity.status(HttpStatus.CREATED).body(checkoutService.Checkout(userDetails.getId()));
        }catch (Exception e){
            return ResponseEntity.badRequest().body(e.getMessage());
        }

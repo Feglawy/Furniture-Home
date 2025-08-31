@@ -14,15 +14,14 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 public class CartController {
 
-    final
-    CartService cartService;
+    private final CartService cartService;
 
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
 
     @GetMapping
-    public List<CartProduct> getCartItems() {
+    public List<CartProductDTO> getCartItems() {
         return cartService.getCartItems();
     }
 

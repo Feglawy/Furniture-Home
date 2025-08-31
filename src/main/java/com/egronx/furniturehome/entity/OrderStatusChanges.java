@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "order_status_changes")
 public class OrderStatusChanges {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +28,6 @@ public class OrderStatusChanges {
     private OrderStatus status;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false, insertable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 }

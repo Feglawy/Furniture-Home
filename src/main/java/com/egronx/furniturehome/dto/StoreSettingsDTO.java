@@ -1,24 +1,12 @@
 package com.egronx.furniturehome.dto;
 
 import com.egronx.furniturehome.entity.StoreSettings;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class StoreSettingsDTO {
-
-
-    public StoreSettingsDTO(StoreSettings storeSettings) {
-        this.name = storeSettings.getName();
-        this.logoUrl = storeSettings.getLogoUrl();
-        this.aboutImageUrl = storeSettings.getAboutImageUrl();
-        this.aboutDescription = storeSettings.getAboutDescription();
-        this.termsAndConditions = storeSettings.getTermsAndConditions();
-        this.facebookUrl = storeSettings.getFacebookUrl();
-        this.whatsappNumber = storeSettings.getWhatsappNumber();
-        this.phoneNumber = storeSettings.getPhoneNumber();
-        this.secondPhoneNumber = storeSettings.getSecondPhoneNumber();
-    }
-
     private String name;
     private String logoUrl;
     private String aboutImageUrl;

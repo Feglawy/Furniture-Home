@@ -3,6 +3,7 @@ package com.egronx.furniturehome.service;
 import com.egronx.furniturehome.dto.StoreSettingsDTO;
 import com.egronx.furniturehome.entity.StoreSettings;
 import com.egronx.furniturehome.repository.StoreSettingsRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,30 +16,41 @@ public class StoreSettingsService {
     public StoreSettingsDTO getStoreSettings() {
         StoreSettings settings = storeSettingsRepository.findById(1L)
                 .orElseThrow(() -> new RuntimeException("Store Settings not found"));
-        return new StoreSettingsDTO(settings);
+        return StoreSettingsDTO.builder()
+                .name(settings.getName())
+                .logoUrl(settings.getLogoUrl())
+                .aboutImageUrl(settings.getAboutImageUrl())
+                .aboutDescription(settings.getAboutDescription())
+                .termsAndConditions(settings.getTermsAndConditions())
+                .facebookUrl(settings.getFacebookUrl())
+                .whatsappNumber(settings.getWhatsappNumber())
+                .phoneNumber(settings.getPhoneNumber())
+                .secondPhoneNumber(settings.getSecondPhoneNumber())
+                .build();
     }
 
-    public StoreSettingsDTO createStoreSettings(StoreSettingsDTO dto) {
-        if (storeSettingsRepository.existsById(1L)) {
-            throw new RuntimeException("Store Settings already exists");
-        }
-
-        StoreSettings storeSettings = mapDtoToEntity(dto);
-        storeSettings.setId(1L);
-
-        return new StoreSettingsDTO(storeSettingsRepository.save(storeSettings));
-    }
-
-    public StoreSettingsDTO updateStoreSettings(StoreSettingsDTO dto) {
+    @Transactional
+    public StoreSettingsDTO createOrUpdateStoreSettings(StoreSettingsDTO dto) {
+        // Try to fetch the single row (id = 1)
         StoreSettings storeSettings = storeSettingsRepository.findById(1L)
-                .orElseGet(StoreSettings::new);
+                .orElse(new StoreSettings()); // create new if not exists
 
-        storeSettings.setId(1L);
-        updateEntityFromDto(storeSettings, dto);
+        // Map DTO fields to entity
+        storeSettings.setName(dto.getName());
+        storeSettings.setLogoUrl(dto.getLogoUrl());
+        storeSettings.setAboutImageUrl(dto.getAboutImageUrl());
+        storeSettings.setAboutDescription(dto.getAboutDescription());
+        storeSettings.setTermsAndConditions(dto.getTermsAndConditions());
+        storeSettings.setFacebookUrl(dto.getFacebookUrl());
+        storeSettings.setWhatsappNumber(dto.getWhatsappNumber());
+        storeSettings.setPhoneNumber(dto.getPhoneNumber());
+        storeSettings.setSecondPhoneNumber(dto.getSecondPhoneNumber());
 
-        return new StoreSettingsDTO(storeSettingsRepository.save(storeSettings));
+        // Save or update
+        storeSettingsRepository.save(storeSettings);
+
+        return dto;
     }
-
 
     private StoreSettings mapDtoToEntity(StoreSettingsDTO dto) {
         StoreSettings entity = new StoreSettings();

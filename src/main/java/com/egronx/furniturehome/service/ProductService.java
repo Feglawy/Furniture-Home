@@ -8,6 +8,7 @@ import com.egronx.furniturehome.repository.CategoryRepository;
 import com.egronx.furniturehome.repository.ProductImageRepository;
 import com.egronx.furniturehome.repository.ProductRepository;
 import com.egronx.furniturehome.validations.ProductValidation;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,6 @@ public class ProductService {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .discount(product.getDiscount())
-                .finalPrice(product.getFinalPrice())
                 .stock(product.getStock())
                 .category(product.getCategory().getName())
                 .images(product.getImages().stream().map(ProductImage::getImageUrl).collect(Collectors.toList()))
@@ -48,12 +48,11 @@ public class ProductService {
 
     private Product mapToEntity(ProductDTO productDTO) {
         return Product.builder()
-                .id(productDTO.getId())
                 .name(productDTO.getName())
                 .description(productDTO.getDescription())
                 .price(productDTO.getPrice())
                 .discount(productDTO.getDiscount())
-                .finalPrice(productDTO.getFinalPrice())
+                .finalPrice(productDTO.getPrice() - (productDTO.getPrice() * productDTO.getDiscount() / 100) )
                 .stock(productDTO.getStock())
                 .category(
                         categoryRepository.findByName(productDTO.getCategory()).orElse(
@@ -70,6 +69,7 @@ public class ProductService {
     }
 
     // Browse products for customer
+    @Transactional
     public List<ProductDTO> getProducts() {
         List<Product> products =  productRepository.findAll();
         List<ProductDTO> productDTOS = new ArrayList<>();
@@ -79,15 +79,15 @@ public class ProductService {
 
     // CRUD
     // Create new product + validation " blank name + price + null category "
+    @Transactional
     public String addProduct(ProductDTO productDto) {
         Product product = mapToEntity(productDto);
-        productValidation.validateAddProduct(product);
-
         productRepository.save(product);
         return "Product added successfully";
     }
 
     // Read specific product
+    @Transactional
     public ProductDTO getProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " is not found"));
@@ -96,17 +96,22 @@ public class ProductService {
     }
 
     // Update product
+    @Transactional
     public String updateProduct(ProductDTO productDto, Long id) {
-        Product product = mapToEntity(productDto);
-        productValidation.validateUpdateProduct(product, id);
-
-        product.setId(id);
+        Product product = this.productRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Product with id " + id + " is not found"));
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setDiscount(productDto.getDiscount());
+        product.setStock(productDto.getStock());
+        product.setFinalPrice(productDto.getPrice() - (productDto.getPrice() * productDto.getDiscount() / 100) );
         productRepository.save(product);
         return "Product updated successfully";
 
     }
 
     // delete product
+    @Transactional
     public String deleteProduct(Long id) {
         productValidation.validateDeleteProduct(id);
 

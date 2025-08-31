@@ -28,12 +28,12 @@ public class Product {
     double price;
     @Column(name = "discount" , nullable = false)
     double discount = 0;
-    @Column(name = "final_price" , nullable = false , updatable = false , insertable = false)
+    @Column(name = "final_price" , nullable = false)
     double finalPrice;
     @Column(name = "stock" , nullable = false)
     Long stock = 0L;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     Category category;
 

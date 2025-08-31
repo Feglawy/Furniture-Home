@@ -37,7 +37,7 @@ public class User {
     java.time.LocalDateTime resetTokenExpiry;
 
     @JoinColumn(name = "role_id" , nullable = false)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     UserRole role;
 
 

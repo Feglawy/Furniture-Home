@@ -4,6 +4,7 @@ import com.egronx.furniturehome.dto.ProductDTO;
 import com.egronx.furniturehome.entity.Product;
 import com.egronx.furniturehome.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -38,10 +39,15 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductDTO product) {
-        String result = productService.updateProduct(product, id);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO product) {
+        try {
+            String result = productService.updateProduct(product, id);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
